@@ -30,8 +30,10 @@ public class OrderService {
         return savedOrder;
     }
 
-    public Optional<Order> getOrderStatus(Long orderId) {
-        return orderRepository.findById(orderId);
+    public String getOrderStatus(Long orderId) {
+        return orderRepository.findById(orderId)
+                .map(Order::getStatus)
+                .orElse("Order Not Found");
     }
 
     public Metrics getMetrics() {

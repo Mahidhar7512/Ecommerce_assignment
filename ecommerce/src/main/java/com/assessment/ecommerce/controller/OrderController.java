@@ -4,6 +4,8 @@ import com.assessment.ecommerce.model.Metrics;
 import com.assessment.ecommerce.model.Order;
 import com.assessment.ecommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -24,9 +26,13 @@ public class OrderController {
         return orderService.placeOrder(order);
     }
 
-    @GetMapping("/{orderId}")
-    public Optional<Order> getOrderStatus(@PathVariable Long orderId) {
-        return orderService.getOrderStatus(orderId);
+    @GetMapping("/{orderId}/status")
+    public ResponseEntity<String> getOrderStatus(@PathVariable Long orderId) {
+        String status = String.valueOf(orderService.getOrderStatus(orderId));
+        if (status.equals("Order Not Found")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(status);
+        }
+        return ResponseEntity.ok(status);
     }
 
     @GetMapping("/metrics")
